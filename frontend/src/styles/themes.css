@@ -1,0 +1,313 @@
+/* ==========================================================================
+   流光 · 主题
+   --------------------------------------------------------------------------
+   每套主题都是同一组设计令牌的换色：纸面（ink-950 ~ ink-600）、
+   墨色（ink-500 ~ ink-50）、光（glow-*）、余烬（ember-*）、影（shade），
+   外加纸面的三层渐变与相纸色。
+
+   ink 系列约定「数字越小越深」，所以深色主题把整套数值反过来就行，
+   组件一行都不用改。
+
+   这些规则不放进任何 @layer —— 未分层的样式优先级高于 Tailwind 的分层，
+   因此能盖住 @theme 生成在 :root 上的默认值。
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- 宣纸（默认） */
+:root {
+  --sky-top: oklch(0.998 0.006 92);
+  --paper-top: oklch(0.978 0.012 87);
+  --paper-bottom: oklch(0.952 0.019 82);
+  /* 看大图、删除确认时的暗幕：必须比纸面深得多，才压得住后面的画面 */
+  --color-scrim: oklch(0.215 0.024 48);
+}
+
+/* ---------------------------------------------------------------- 晨雾 */
+html[data-theme='mist'] {
+  --color-ink-950: oklch(0.972 0.007 235);
+  --color-ink-900: oklch(0.988 0.005 236);
+  --color-ink-850: oklch(0.955 0.009 233);
+  --color-ink-800: oklch(0.928 0.012 231);
+  --color-ink-700: oklch(0.868 0.016 229);
+  --color-ink-600: oklch(0.8 0.019 227);
+  --color-ink-500: oklch(0.642 0.021 226);
+  --color-ink-400: oklch(0.552 0.022 224);
+  --color-ink-300: oklch(0.465 0.023 222);
+  --color-ink-200: oklch(0.378 0.024 220);
+  --color-ink-100: oklch(0.303 0.025 218);
+  --color-ink-50: oklch(0.242 0.026 216);
+
+  --color-glow-300: oklch(0.552 0.098 238);
+  --color-glow-400: oklch(0.625 0.102 242);
+  --color-glow-500: oklch(0.695 0.098 246);
+  --color-glow-600: oklch(0.782 0.072 250);
+  --color-glow-700: oklch(0.868 0.045 254);
+
+  --color-ember-400: oklch(0.602 0.142 24);
+  --color-ember-500: oklch(0.526 0.134 20);
+
+  --color-shade: oklch(0.4 0.035 236);
+
+  --sky-top: oklch(0.996 0.004 240);
+  --paper-top: oklch(0.972 0.008 236);
+  --paper-bottom: oklch(0.946 0.012 232);
+}
+
+/* ---------------------------------------------------------------- 暮山 */
+html[data-theme='dusk'] {
+  --color-ink-950: oklch(0.962 0.016 62);
+  --color-ink-900: oklch(0.981 0.012 64);
+  --color-ink-850: oklch(0.942 0.021 58);
+  --color-ink-800: oklch(0.914 0.025 56);
+  --color-ink-700: oklch(0.855 0.03 54);
+  --color-ink-600: oklch(0.788 0.034 52);
+  --color-ink-500: oklch(0.634 0.036 50);
+  --color-ink-400: oklch(0.544 0.038 48);
+  --color-ink-300: oklch(0.46 0.038 46);
+  --color-ink-200: oklch(0.376 0.038 44);
+  --color-ink-100: oklch(0.302 0.038 42);
+  --color-ink-50: oklch(0.242 0.038 40);
+
+  --color-glow-300: oklch(0.556 0.155 40);
+  --color-glow-400: oklch(0.632 0.168 44);
+  --color-glow-500: oklch(0.702 0.165 50);
+  --color-glow-600: oklch(0.784 0.132 58);
+  --color-glow-700: oklch(0.868 0.088 66);
+
+  --color-ember-400: oklch(0.578 0.168 22);
+  --color-ember-500: oklch(0.508 0.158 18);
+
+  --color-shade: oklch(0.42 0.07 44);
+
+  --sky-top: oklch(0.995 0.006 72);
+  --paper-top: oklch(0.972 0.013 66);
+  --paper-bottom: oklch(0.944 0.019 58);
+}
+
+/* ---------------------------------------------------------------- 苔痕 */
+html[data-theme='moss'] {
+  --color-ink-950: oklch(0.964 0.011 138);
+  --color-ink-900: oklch(0.983 0.008 140);
+  --color-ink-850: oklch(0.944 0.015 134);
+  --color-ink-800: oklch(0.916 0.018 132);
+  --color-ink-700: oklch(0.858 0.022 130);
+  --color-ink-600: oklch(0.79 0.026 128);
+  --color-ink-500: oklch(0.636 0.028 126);
+  --color-ink-400: oklch(0.546 0.029 124);
+  --color-ink-300: oklch(0.462 0.029 122);
+  --color-ink-200: oklch(0.378 0.029 120);
+  --color-ink-100: oklch(0.302 0.029 118);
+  --color-ink-50: oklch(0.242 0.029 116);
+
+  --color-glow-300: oklch(0.548 0.098 150);
+  --color-glow-400: oklch(0.622 0.108 152);
+  --color-glow-500: oklch(0.692 0.108 154);
+  --color-glow-600: oklch(0.78 0.085 152);
+  --color-glow-700: oklch(0.868 0.055 150);
+
+  --color-ember-400: oklch(0.592 0.145 34);
+  --color-ember-500: oklch(0.518 0.136 30);
+
+  --color-shade: oklch(0.4 0.045 146);
+
+  --sky-top: oklch(0.996 0.006 145);
+  --paper-top: oklch(0.97 0.014 138);
+  --paper-bottom: oklch(0.94 0.02 132);
+}
+
+/* ---------------------------------------------------------------- 夜航（深色）
+   ink 整体反转：950 是夜空，50 是月白。
+   glow 也跟着翻过来 —— 浅色主题里 glow-300 最暗（用来写字），
+   深色主题里它必须最亮，对比度才够。 */
+html[data-theme='night'] {
+  color-scheme: dark;
+
+  --color-ink-950: oklch(0.198 0.017 258);
+  --color-ink-900: oklch(0.238 0.019 256);
+  --color-ink-850: oklch(0.272 0.021 254);
+  --color-ink-800: oklch(0.306 0.023 252);
+  --color-ink-700: oklch(0.362 0.025 250);
+  --color-ink-600: oklch(0.424 0.027 248);
+  --color-ink-500: oklch(0.545 0.026 246);
+  --color-ink-400: oklch(0.638 0.024 244);
+  --color-ink-300: oklch(0.724 0.021 242);
+  --color-ink-200: oklch(0.808 0.019 240);
+  --color-ink-100: oklch(0.878 0.016 238);
+  --color-ink-50: oklch(0.938 0.013 236);
+
+  --color-glow-300: oklch(0.828 0.078 228);
+  --color-glow-400: oklch(0.762 0.092 226);
+  --color-glow-500: oklch(0.7 0.104 224);
+  --color-glow-600: oklch(0.6 0.096 222);
+  --color-glow-700: oklch(0.478 0.072 220);
+
+  --color-ember-400: oklch(0.706 0.152 38);
+  --color-ember-500: oklch(0.628 0.148 34);
+
+  --color-shade: oklch(0.09 0.012 260);
+
+  --sky-top: oklch(0.245 0.022 262);
+  --paper-top: oklch(0.208 0.019 258);
+  --paper-bottom: oklch(0.178 0.016 254);
+  /* 夜里的暗幕要比夜空更深，才压得住 */
+  --color-scrim: oklch(0.105 0.014 260);
+}
+
+/* ---------------------------------------------------------------- 旧书 */
+html[data-theme='relic'] {
+  --color-ink-950: oklch(0.952 0.026 86);
+  --color-ink-900: oklch(0.974 0.02 88);
+  --color-ink-850: oklch(0.93 0.032 84);
+  --color-ink-800: oklch(0.902 0.038 82);
+  --color-ink-700: oklch(0.842 0.044 80);
+  --color-ink-600: oklch(0.772 0.05 78);
+  --color-ink-500: oklch(0.62 0.052 76);
+  --color-ink-400: oklch(0.532 0.054 74);
+  --color-ink-300: oklch(0.452 0.054 72);
+  --color-ink-200: oklch(0.372 0.054 70);
+  --color-ink-100: oklch(0.298 0.054 68);
+  --color-ink-50: oklch(0.24 0.054 66);
+
+  --color-glow-300: oklch(0.518 0.108 62);
+  --color-glow-400: oklch(0.588 0.118 64);
+  --color-glow-500: oklch(0.658 0.12 66);
+  --color-glow-600: oklch(0.75 0.098 70);
+  --color-glow-700: oklch(0.846 0.068 76);
+
+  --color-ember-400: oklch(0.552 0.148 36);
+  --color-ember-500: oklch(0.48 0.14 32);
+
+  --color-shade: oklch(0.4 0.07 70);
+
+  --sky-top: oklch(0.988 0.014 92);
+  --paper-top: oklch(0.958 0.028 86);
+  --paper-bottom: oklch(0.928 0.036 80);
+}
+
+/* ---------------------------------------------------------------- 红叶 */
+html[data-theme='maple'] {
+  /* 纸是秋叶的赭黄，红只留给光 —— 否则会跟「樱」撞在一起 */
+  --color-ink-950: oklch(0.958 0.026 58);
+  --color-ink-900: oklch(0.976 0.02 60);
+  --color-ink-850: oklch(0.938 0.03 56);
+  --color-ink-800: oklch(0.91 0.034 54);
+  --color-ink-700: oklch(0.852 0.04 52);
+  --color-ink-600: oklch(0.784 0.044 50);
+  --color-ink-500: oklch(0.632 0.046 48);
+  --color-ink-400: oklch(0.542 0.046 46);
+  --color-ink-300: oklch(0.458 0.046 44);
+  --color-ink-200: oklch(0.374 0.046 42);
+  --color-ink-100: oklch(0.298 0.046 40);
+  --color-ink-50: oklch(0.24 0.046 38);
+
+  --color-glow-300: oklch(0.548 0.178 28);
+  --color-glow-400: oklch(0.618 0.19 30);
+  --color-glow-500: oklch(0.688 0.186 34);
+  --color-glow-600: oklch(0.774 0.148 40);
+  --color-glow-700: oklch(0.862 0.098 48);
+
+  --color-ember-400: oklch(0.566 0.176 22);
+  --color-ember-500: oklch(0.492 0.166 18);
+
+  --color-shade: oklch(0.41 0.08 30);
+
+  --sky-top: oklch(0.992 0.014 66);
+  --paper-top: oklch(0.964 0.03 58);
+  --paper-bottom: oklch(0.936 0.038 50);
+}
+
+/* ---------------------------------------------------------------- 樱 */
+html[data-theme='sakura'] {
+  --color-ink-950: oklch(0.968 0.014 12);
+  --color-ink-900: oklch(0.984 0.01 14);
+  --color-ink-850: oklch(0.948 0.018 10);
+  --color-ink-800: oklch(0.92 0.022 8);
+  --color-ink-700: oklch(0.862 0.026 6);
+  --color-ink-600: oklch(0.794 0.03 4);
+  --color-ink-500: oklch(0.64 0.032 2);
+  --color-ink-400: oklch(0.55 0.032 0);
+  --color-ink-300: oklch(0.466 0.032 358);
+  --color-ink-200: oklch(0.38 0.032 356);
+  --color-ink-100: oklch(0.304 0.032 354);
+  --color-ink-50: oklch(0.244 0.032 352);
+
+  --color-glow-300: oklch(0.586 0.128 8);
+  --color-glow-400: oklch(0.658 0.138 12);
+  --color-glow-500: oklch(0.726 0.132 16);
+  --color-glow-600: oklch(0.808 0.104 20);
+  --color-glow-700: oklch(0.882 0.068 26);
+
+  --color-ember-400: oklch(0.598 0.146 30);
+  --color-ember-500: oklch(0.522 0.138 26);
+
+  --color-shade: oklch(0.42 0.06 10);
+
+  --sky-top: oklch(0.996 0.006 20);
+  --paper-top: oklch(0.976 0.015 14);
+  --paper-bottom: oklch(0.95 0.022 8);
+}
+
+/* ---------------------------------------------------------------- 深海 */
+html[data-theme='ocean'] {
+  --color-ink-950: oklch(0.962 0.014 208);
+  --color-ink-900: oklch(0.98 0.01 210);
+  --color-ink-850: oklch(0.942 0.018 206);
+  --color-ink-800: oklch(0.914 0.022 204);
+  --color-ink-700: oklch(0.856 0.026 202);
+  --color-ink-600: oklch(0.788 0.03 200);
+  --color-ink-500: oklch(0.634 0.032 198);
+  --color-ink-400: oklch(0.544 0.033 196);
+  --color-ink-300: oklch(0.46 0.033 194);
+  --color-ink-200: oklch(0.376 0.033 192);
+  --color-ink-100: oklch(0.3 0.033 190);
+  --color-ink-50: oklch(0.24 0.033 188);
+
+  --color-glow-300: oklch(0.556 0.112 230);
+  --color-glow-400: oklch(0.628 0.118 226);
+  --color-glow-500: oklch(0.698 0.112 222);
+  --color-glow-600: oklch(0.784 0.086 218);
+  --color-glow-700: oklch(0.868 0.054 214);
+
+  --color-ember-400: oklch(0.638 0.152 40);
+  --color-ember-500: oklch(0.558 0.146 36);
+
+  --color-shade: oklch(0.38 0.055 215);
+
+  --sky-top: oklch(0.994 0.006 214);
+  --paper-top: oklch(0.968 0.015 208);
+  --paper-bottom: oklch(0.94 0.022 202);
+}
+
+/* ---------------------------------------------------------------- 星空（深色）
+   比夜航再沉一点、偏紫，光带一点星芒的冷紫。 */
+html[data-theme='starry'] {
+  color-scheme: dark;
+
+  --color-ink-950: oklch(0.178 0.032 285);
+  --color-ink-900: oklch(0.218 0.034 283);
+  --color-ink-850: oklch(0.252 0.036 281);
+  --color-ink-800: oklch(0.288 0.038 279);
+  --color-ink-700: oklch(0.348 0.04 277);
+  --color-ink-600: oklch(0.412 0.042 275);
+  --color-ink-500: oklch(0.538 0.038 273);
+  --color-ink-400: oklch(0.632 0.034 271);
+  --color-ink-300: oklch(0.722 0.03 269);
+  --color-ink-200: oklch(0.806 0.026 267);
+  --color-ink-100: oklch(0.878 0.022 265);
+  --color-ink-50: oklch(0.942 0.016 263);
+
+  --color-glow-300: oklch(0.842 0.088 292);
+  --color-glow-400: oklch(0.774 0.104 290);
+  --color-glow-500: oklch(0.712 0.116 288);
+  --color-glow-600: oklch(0.602 0.108 286);
+  --color-glow-700: oklch(0.476 0.084 284);
+
+  --color-ember-400: oklch(0.716 0.148 42);
+  --color-ember-500: oklch(0.638 0.144 38);
+
+  --color-shade: oklch(0.08 0.02 288);
+
+  --sky-top: oklch(0.228 0.038 288);
+  --paper-top: oklch(0.192 0.034 285);
+  --paper-bottom: oklch(0.16 0.03 282);
+  --color-scrim: oklch(0.092 0.022 288);
+}

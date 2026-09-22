@@ -1,0 +1,37 @@
+# 构建产物
+backend/target/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# CLIP 模型（156MB，不进仓库；构建镜像时自动下载，本地开发见 README）
+backend/models/
+
+# 运行时数据（媒体文件）
+.data/
+data/
+
+# 环境变量
+.env
+.env.local
+
+# 日志
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# IDE / 助手工具的项目数据
+.codebuddy/
+.claude/
+
+# 种子素材的中间产物
+seed/*.log
+
+# TS 增量构建信息（本地产物）
+frontend/tsconfig.tsbuildinfo

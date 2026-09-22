@@ -1,0 +1,6 @@
+# 别把本地这些送进构建上下文
+target/
+models/
+data/
+*.log
+.env

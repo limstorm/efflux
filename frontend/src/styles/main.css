@@ -1,0 +1,600 @@
+@import 'tailwindcss';
+@import './themes.css';
+
+/* ==========================================================================
+   流光 · 设计令牌
+   方向：暖阳宣纸 —— 象牙纸面，赭金为光，克制的影。
+   注意：ink 系列在这里是「数字越小越深」，
+        因此 ink-950 是纸面、ink-50 是墨色，亮暗主题可以整体对调。
+   ========================================================================== */
+
+@theme {
+  /* 纸面层次 */
+  --color-ink-950: oklch(0.974 0.011 86);
+  --color-ink-900: oklch(0.99 0.007 88);
+  --color-ink-850: oklch(0.958 0.014 85);
+  --color-ink-800: oklch(0.934 0.017 83);
+  --color-ink-700: oklch(0.876 0.022 80);
+  --color-ink-600: oklch(0.808 0.026 76);
+
+  /* 墨色文字 */
+  --color-ink-500: oklch(0.648 0.024 62);
+  --color-ink-400: oklch(0.556 0.024 58);
+  --color-ink-300: oklch(0.468 0.025 56);
+  --color-ink-200: oklch(0.382 0.025 54);
+  --color-ink-100: oklch(0.306 0.025 52);
+  --color-ink-50: oklch(0.242 0.026 50);
+
+  /* 光 · 阳光与赭石 */
+  --color-glow-300: oklch(0.572 0.135 52);
+  --color-glow-400: oklch(0.64 0.148 57);
+  --color-glow-500: oklch(0.702 0.152 63);
+  --color-glow-600: oklch(0.782 0.126 69);
+  --color-glow-700: oklch(0.866 0.086 77);
+
+  /* 余烬 · 情绪重音 */
+  --color-ember-400: oklch(0.618 0.156 36);
+  --color-ember-500: oklch(0.542 0.146 32);
+
+  /* 影 · 暖调阴影（浅色设计里，影子的颜色决定质感） */
+  --color-shade: oklch(0.42 0.06 58);
+
+  /* 字体 */
+  --font-serif:
+    'Noto Serif SC Variable', 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong',
+    'SimSun', serif;
+  --font-sans:
+    'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui,
+    -apple-system, 'Helvetica Neue', sans-serif;
+  --font-display: 'Cormorant Garamond', 'Noto Serif SC Variable', Georgia, 'Songti SC', serif;
+
+  /* 缓动（指数曲线，慢而连绵） */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-soft: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-drift: cubic-bezier(0.37, 0, 0.63, 1);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+}
+
+/* ==========================================================================
+   基础
+   ========================================================================== */
+
+@layer base {
+  :root {
+    /* 刘海屏 / 底部横条的安全区，统一在这里取一次；
+       这样各页面不必重复写 env()，也能保证含义一致。 */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--color-ink-600) transparent;
+    /* 整页不横向溢出，避免移动端出现左右橡皮筋。
+       用 clip 而不是 hidden：hidden 会把另一轴也算作 auto，
+       html 和 body 于是双双变成滚动容器，
+       内容一有起伏就会并排长出两条滚动条。
+       （不支持 clip 的老内核退化成 hidden，行为不变。） */
+    overflow-x: hidden;
+    overflow-x: clip;
+    /* 光河靠拖拽和滚轮浏览，右侧进度条夹在画面里只会碍眼 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  body {
+    margin: 0;
+    /* 先给旧内核（微信 X5 等不支持 dvh 的浏览器）一个可用的值，再让新浏览器覆盖 */
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--color-ink-950);
+    /* 天光从上方漫下来，纸面自下而上升温。
+       三层都走主题变量，换主题时连天光一起换。 */
+    background-image:
+      radial-gradient(130% 78% at 50% -12%, var(--sky-top) 0%, transparent 58%),
+      linear-gradient(180deg, var(--paper-top) 0%, var(--paper-bottom) 100%);
+    background-attachment: fixed;
+    color: var(--color-ink-50);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-y: none;
+  }
+
+  #app {
+    min-height: 100vh;
+    min-height: 100dvh;
+    isolation: isolate;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-glow-600) 34%, transparent);
+    color: var(--color-ink-50);
+  }
+
+  :focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--color-glow-500) 72%, transparent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: color-mix(in oklab, var(--color-ink-500) 78%, transparent);
+  }
+
+  /* 页面自身的滚动条藏起来（内容照常能滚），
+     其它容器仍用下面这套细滚动条 */
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-ink-600) 70%, transparent);
+    border-radius: 99px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-ink-500) 65%, transparent);
+    background-clip: content-box;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   氛围：窗光与纸纹
+   ========================================================================== */
+
+@layer components {
+  /* 斜照进房间的几束阳光，极慢地游移 */
+  .ambient {
+    position: fixed;
+    inset: -10%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        42% 32% at 86% 6%,
+        color-mix(in oklab, var(--color-glow-500) 32%, transparent),
+        transparent 66%
+      ),
+      radial-gradient(
+        34% 26% at 4% 94%,
+        color-mix(in oklab, var(--color-ember-400) 17%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        52% 30% at 52% 44%,
+        color-mix(in oklab, var(--color-glow-600) 15%, transparent),
+        transparent 72%
+      );
+    animation: ambient-drift 40s var(--ease-drift) infinite alternate;
+    will-change: transform, opacity;
+  }
+
+  /* 纸纹：几乎察觉不到，只是让大片留白不至于死板。
+     这里刻意不用 mix-blend-mode：它是全屏最后的一层，混合意味着每帧都要把
+     背后整屏重算一遍——页面滚动时闪、大图划动时闪，都是它。噪声本身是
+     4.5% 不透明的灰点、这层再乘 0.4，改成普通叠加后只是"两点钟方向的灰点
+     不再压暗"，肉眼无从分辨（实测改前后整页像素平均差 < 1/255）。 */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.4;
+    mix-blend-mode: normal;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  }
+
+  /* 纸面边缘微微收拢，把视线留在中间 */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(
+      118% 86% at 50% 46%,
+      transparent 62%,
+      color-mix(in oklab, var(--color-shade) 7%, transparent) 100%
+    );
+  }
+
+  /* 页面外壳：优先用动态视口高度，旧内核退回 vh */
+  .app-shell {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* 细分割线 */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in oklab, var(--color-ink-500) 32%, transparent),
+      transparent
+    );
+  }
+
+  /* 悬浮提示：原生的 title 又慢又素，有的内核里干脆不弹，所以自己画一条。
+     挂上 .tip 并给一个 data-tip，鼠标停上去或键盘聚焦时浮在元素上方。 */
+  .tip {
+    position: relative;
+  }
+
+  .tip[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.6rem);
+    z-index: 6;
+    padding: 0.3rem 0.62rem;
+    border-radius: 9px;
+    border: 1px solid color-mix(in oklab, var(--color-ink-600) 58%, transparent);
+    background: color-mix(in oklab, var(--color-ink-850) 96%, transparent);
+    box-shadow: 0 16px 32px -24px color-mix(in oklab, var(--color-shade) 92%, transparent);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.55;
+    white-space: nowrap;
+    color: color-mix(in oklab, var(--color-ink-100) 96%, transparent);
+    opacity: 0;
+    transform: translateY(0.22rem);
+    pointer-events: none;
+    transition:
+      opacity 0.22s var(--ease-out-soft),
+      transform 0.22s var(--ease-out-soft);
+  }
+
+  .tip[data-tip]:hover::after,
+  .tip[data-tip]:focus-visible::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 贴着屏幕顶边的按钮，提示改从下方浮出来，免得顶出去 */
+  .tip--down[data-tip]::after {
+    top: calc(100% + 0.6rem);
+    bottom: auto;
+    transform: translateY(-0.22rem);
+  }
+
+  /* 幽灵按钮：安静、只在需要时显形 */
+  .ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--color-ink-600) 62%, transparent);
+    background: color-mix(in oklab, var(--color-ink-900) 76%, transparent);
+    color: var(--color-ink-100);
+    backdrop-filter: blur(14px) saturate(1.05);
+    box-shadow: 0 4px 16px -10px color-mix(in oklab, var(--color-shade) 55%, transparent);
+    transition:
+      border-color 0.4s var(--ease-out-soft),
+      background-color 0.4s var(--ease-out-soft),
+      color 0.3s var(--ease-out-soft),
+      transform 0.25s var(--ease-out-soft);
+  }
+  .ghost-btn:hover {
+    border-color: color-mix(in oklab, var(--color-glow-500) 62%, transparent);
+    background: var(--color-ink-900);
+    color: var(--color-glow-300);
+  }
+  .ghost-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* 阳光按钮 */
+  .glow-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--color-glow-400) 70%, transparent);
+    background: linear-gradient(
+      148deg,
+      color-mix(in oklab, var(--color-glow-400) 96%, transparent),
+      color-mix(in oklab, var(--color-glow-500) 96%, transparent)
+    );
+    color: oklch(0.99 0.01 90);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.24),
+      0 10px 26px -12px color-mix(in oklab, var(--color-glow-500) 85%, transparent);
+    transition:
+      transform 0.25s var(--ease-out-soft),
+      box-shadow 0.45s var(--ease-out-soft),
+      filter 0.3s var(--ease-out-soft);
+  }
+  .glow-btn:hover:not(:disabled) {
+    filter: brightness(1.04) saturate(1.04);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.28),
+      0 14px 34px -12px color-mix(in oklab, var(--color-glow-500) 92%, transparent);
+  }
+  .glow-btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .glow-btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    filter: saturate(0.5);
+    box-shadow: none;
+  }
+
+  /* 输入框：纸面上的一枚浅槽 */
+  .paper-input {
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, var(--color-ink-600) 66%, transparent);
+    background: color-mix(in oklab, var(--color-ink-900) 92%, transparent);
+    padding: 0.85rem 1.1rem;
+    color: var(--color-ink-50);
+    box-shadow: inset 0 1px 2px color-mix(in oklab, var(--color-shade) 8%, transparent);
+    transition:
+      border-color 0.35s var(--ease-out-soft),
+      background-color 0.35s var(--ease-out-soft),
+      box-shadow 0.35s var(--ease-out-soft);
+  }
+  .paper-input:hover {
+    border-color: color-mix(in oklab, var(--color-ink-500) 62%, transparent);
+  }
+  .paper-input:focus {
+    outline: none;
+    border-color: color-mix(in oklab, var(--color-glow-500) 72%, transparent);
+    background: var(--color-ink-900);
+    box-shadow:
+      inset 0 1px 2px color-mix(in oklab, var(--color-shade) 6%, transparent),
+      0 0 0 4px color-mix(in oklab, var(--color-glow-600) 22%, transparent);
+  }
+
+  /* 标签胶囊：色相由标签名决定（--tag-hue），同一个标签永远同一个颜色 */
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 999px;
+    border: 1px solid oklch(0.72 0.075 var(--tag-hue, 58) / 0.5);
+    background: oklch(0.968 0.032 var(--tag-hue, 58));
+    padding: 0.25rem 0.7rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: oklch(0.46 0.115 var(--tag-hue, 58));
+    transition:
+      border-color 0.3s var(--ease-out-soft),
+      color 0.3s var(--ease-out-soft),
+      background-color 0.3s var(--ease-out-soft),
+      transform 0.25s var(--ease-out-soft);
+  }
+  .tag-pill:hover,
+  .tag-pill[data-active='true'] {
+    border-color: oklch(0.58 0.145 var(--tag-hue, 58) / 0.7);
+    background: oklch(0.93 0.065 var(--tag-hue, 58));
+    color: oklch(0.4 0.135 var(--tag-hue, 58));
+  }
+  .tag-pill:active {
+    transform: scale(0.97);
+  }
+
+  /* 衬线标题 */
+  .title-serif {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+  }
+
+  .numeral {
+    font-family: var(--font-display);
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+    letter-spacing: 0.03em;
+  }
+
+  /* 小字号场景：换成笔画更清楚的衬线数字，避免「1」「8」难以辨认 */
+  .numeral--clear {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+}
+
+/* ==========================================================================
+   动效
+   ========================================================================== */
+
+@keyframes ambient-drift {
+  0% {
+    transform: translate3d(-1.4%, -1%, 0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(1.6%, 1.2%, 0) scale(1.05);
+    opacity: 0.94;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -160% 0;
+  }
+  to {
+    background-position: 260% 0;
+  }
+}
+
+.animate-rise {
+  animation: rise-in 0.7s var(--ease-out-soft) both;
+}
+
+.animate-fade {
+  animation: fade-in 0.6s var(--ease-out-soft) both;
+}
+
+.skeleton {
+  background:
+    linear-gradient(
+      100deg,
+      transparent 20%,
+      color-mix(in oklab, var(--color-ink-900) 85%, transparent) 42%,
+      transparent 64%
+    ),
+    color-mix(in oklab, var(--color-ink-800) 70%, transparent);
+  background-size: 220% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+/* 页面转场 */
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 0.45s var(--ease-out-soft),
+    transform 0.45s var(--ease-out-soft);
+}
+
+/* 正在淡出的那一页脱开文档流（保留自己的高度，只是不再占位）：
+   新页面立刻在它原来的位置上开始淡入，两页交叠着换。
+   原来用的是 <Transition mode="out-in">——旧的淡完（0.45s）之后新的才挂载，
+   中间那一段"旧没了、新没来"的空档，手机上长到能看见（实测连拍帧：屏幕会亮到
+   近乎全白两三帧），就是"打开记忆页闪一下"。 */
+.page-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
+}
+
+/* ── 小屏上的渲染降级开关 ─────────────────────────────────────────────
+   手机上 GPU 最先撑不住的是"模糊"。backdrop-filter 要求浏览器每帧把背后的
+   画面重新做一遍高斯模糊，而光河是一条一直在动的长卷——两者叠在一起，
+   等于每帧把整屏重算十几遍，GPU 就是这么吃满的。
+
+   下面几刀只在 760px 以下生效，桌面端一字未改。为什么用 !important：要盖住的
+   是分散在 31 处的组件样式（scoped 样式没法从外面统一关掉），这是一个总开关。
+
+   注意：动 opacity / transform 的动画（ambient-drift、spark-drift、pulse-soft、
+   demo-breath）一条都没动——它们跑在合成层上，很便宜，留着的正是"活气"。 */
+@media (max-width: 760px) {
+  /* 1. 关掉所有毛玻璃。底色本来就填了 84%~90% 的实色，关掉几乎看不出，
+        省下的却是每帧十几次全屏高斯模糊。 */
+  *,
+  *::before,
+  *::after {
+    /* 带前缀的写在前面：压缩器会把这一对当重复项留下最后一条，
+       而计算样式只认不带前缀的那个属性名 */
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* 2. 纸面的天光不再钉在视口上。fixed 背景滚动时会拖着整屏重绘；
+        纸纹是重复纹理，改成 scroll 看不出来。 */
+  body {
+    background-attachment: scroll !important;
+  }
+
+  /* 3. 加载占位条的流光动的是 background-position——每帧重绘整条。
+        占位条还在，只是不再闪。 */
+  .skeleton {
+    animation: none !important;
+  }
+
+  /* 4. 选中的氛围胶囊那圈呼吸光晕动的是 box-shadow，同样是每帧重绘。 */
+  .mood-chip.is-sounding {
+    animation: none !important;
+  }
+}

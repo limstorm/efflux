@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: efflux-db
+    environment:
+      POSTGRES_USER: efflux
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-efflux_local_password}
+      POSTGRES_DB: efflux
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U efflux -d efflux"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    container_name: efflux-backend
+    environment:
+      DATABASE_URL: postgres://efflux:${POSTGRES_PASSWORD:-efflux_local_password}@db:5432/efflux
+      EFFLUX_DATA_DIR: /data/media
+      EFFLUX_PORT: "8080"
+      EFFLUX_DB_MAX_CONNECTIONS: "16"
+      # 图片与音频的单个文件上限；视频不受此限
+      EFFLUX_MAX_UPLOAD_MB: "640"
+      RUST_LOG: ${RUST_LOG:-info}
+    volumes:
+      - media_data:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+    container_name: efflux-web
+    ports:
+      - "${EFFLUX_HTTP_PORT:-8080}:80"
+    volumes:
+      # 让 Nginx 直接服务媒体文件，绕过应用层，延迟最低
+      - media_data:/data/media:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  media_data:

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#f8f3ea" />
+    <meta name="description" content="流光 — 把生活的点滴，交给时间慢慢流过" />
+    <title>流光</title>
+    <script>
+      // 在样式生效前就把主题定下来，避免刷新时先闪一下白纸。
+      // 这段必须留在 head 里同步执行，所以写得朴素些。
+      (function () {
+        var COLORS = {
+          xuan: '#f8f3ea',
+          mist: '#f3f6f8',
+          dusk: '#f7f0e5',
+          moss: '#f1f5ee',
+          relic: '#f4ead6',
+          maple: '#f5ecdb',
+          sakura: '#f9f0ef',
+          ocean: '#eff4f6',
+          night: '#1b1f26',
+          starry: '#191a2b',
+        }
+        var id = 'xuan'
+        try {
+          var saved = localStorage.getItem('efflux.theme')
+          if (saved && COLORS[saved]) id = saved
+        } catch (e) {
+          /* 隐私模式下读不到，用默认主题 */
+        }
+        if (id !== 'xuan') document.documentElement.setAttribute('data-theme', id)
+        var meta = document.querySelector('meta[name="theme-color"]')
+        if (meta) meta.setAttribute('content', COLORS[id])
+      })()
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- SVG 图标认不出来的旧浏览器走这一份（16 / 32 / 48） -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+
+    <!-- 添加到主屏幕后可以真正全屏（没有地址栏） -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="流光" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
